@@ -50,4 +50,43 @@ export default async function handler(req, res) {
 
     res.status(200).end()
   }
+
+  if (req.method === 'PUT') {
+    const job = await prisma.job.findUnique({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    })
+  
+    if (job.authorId !== user.id) {
+      res.status(401).json({ message: 'Not authorized to edit' })
+    }
+  
+  
+  }
+  if (req.body.task === 'publish') {
+    await prisma.job.update({
+      where: {
+        id: parseInt(req.body.id),
+      },
+      data: {
+        published: true,
+      },
+    })
+  }
+
+  if (req.body.task === 'unpublish') {
+    await prisma.job.update({
+      where: {
+        id: parseInt(req.body.id),
+      },
+      data: {
+        published: false,
+      },
+    })
+  }
+
+  res.status(200).end()
+  return
+
 }

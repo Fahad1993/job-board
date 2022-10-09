@@ -1,7 +1,6 @@
 import { getSession, useSession } from 'next-auth/react'
 import prisma from 'lib/prisma'
 import { getJobsPosted, getUser, getApplications } from 'lib/data.js'
-import Jobs from 'components/Jobs'
 import Link from 'next/link'
 import Job from 'components/Job'
 
@@ -19,21 +18,17 @@ export default function Dashboard({ jobs, user, applications }) {
           </span>
         )}
         {session && (
-
-
           <p className='mt-10 mb-10 text-2xl font-normal'>
             {user.company ? 'all the jobs you posted' : 'your applications'}
           </p>
-
-
         )}
       </div>
 
       {user.company ? (
         <div>
           {jobs.map((job, index) => (
-            <div>
-              <Job  key={index} job={job} isDashboard={true} />
+            <div key={index}>
+              <Job job={job} isDashboard={true} />
 
               <div className='mb-4 mt-20'>
                 <div className='pl-16 pr-16 -mt-6'>
@@ -68,9 +63,9 @@ export default function Dashboard({ jobs, user, applications }) {
         </div>
       ) : (
         <>
-          {applications.map((application, application_index) => {
+          {applications.map((application) => {
             return (
-              <div key={application_index} className='mb-4 mt-20 flex justify-center'>
+              <div className='mb-4 mt-20 flex justify-center'>
                 <div className='pl-16 pr-16 -mt-6 w-1/2'>
                   <Link href={`/job/${application.job.id}`}>
                     <a className='text-xl font-bold underline'>
