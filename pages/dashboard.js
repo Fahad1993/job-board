@@ -3,6 +3,7 @@ import prisma from 'lib/prisma'
 import { getJobsPosted, getUser, getApplications } from 'lib/data.js'
 import Jobs from 'components/Jobs'
 import Link from 'next/link'
+import Job from 'components/Job'
 
 export default function Dashboard({ jobs, user, applications }) {
   const { data: session, status } = useSession()
@@ -18,18 +19,53 @@ export default function Dashboard({ jobs, user, applications }) {
           </span>
         )}
         {session && (
-          
-            
-              <p className='mt-10 mb-10 text-2xl font-normal'>
-              {user.company ? 'all the jobs you posted' : 'your applications'}
-              </p>
-           
-         
+
+
+          <p className='mt-10 mb-10 text-2xl font-normal'>
+            {user.company ? 'all the jobs you posted' : 'your applications'}
+          </p>
+
+
         )}
       </div>
 
       {user.company ? (
-        <Jobs jobs={jobs} isDashboard={true} />
+        <div>
+          {jobs.map((job, index) => (
+            <div>
+              <Job  key={index} job={job} isDashboard={true} />
+
+              <div className='mb-4 mt-20'>
+                <div className='pl-16 pr-16 -mt-6'>
+                  {job.applications.length === 0 ? (
+                    <p className='mb-10 text-2xl font-normal'>
+                      No applications so far 😞
+                    </p>
+                  ) : (
+                    <p className='mb-10 text-2xl font-normal'>
+                      {job.applications.length} applications
+                    </p>
+                  )}
+
+                  {job.applications?.map((application, application_index) => (
+                    <div key={index + '-' + application_index}>
+                      <h2 className='text-base font-normal mt-3'>
+                        <span className='text-base font-bold mt-3 mr-3'>
+                          {application.author.name}
+                        </span>
+                        {application.author.email}
+                      </h2>
+                      <p className='text-lg font-normal mt-2 mb-3'>
+                        {application.coverletter}
+                      </p>
+                      <hr />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <>
           {applications.map((application, application_index) => {
@@ -72,7 +108,7 @@ export async function getServerSideProps(context) {
     applications = JSON.parse(JSON.stringify(applications))
 
   }
- 
+
 
   return {
     props: {

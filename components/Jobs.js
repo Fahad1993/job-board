@@ -1,12 +1,12 @@
 import Job from 'components/Job'
 
  
-  const Jobs = ({ jobs, isDashboard }) => {
+  const Jobs = ({ jobs }) => {
 
     return (
         <>
           {jobs.map((job, index) => (
-            <Job key={index} job={job} isDashboard={isDashboard} />
+            <Job key={index} job={job} />
           ))}
         </>
       )
